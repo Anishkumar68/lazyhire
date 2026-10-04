@@ -1,0 +1,2 @@
+# lazyhire
+lazyhire - Job automation 
