@@ -1,4 +1,5 @@
 from typing import Optional
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,22 +13,21 @@ class Settings(BaseSettings):
     # App Info
     PROJECT_NAME: str = "LazyHire"
     VERSION: str = "0.1.0"
-    ENV: str = "development"
+    ENV: str 
     DEBUG: bool = True
     API_V1_STR: str = "/api/v1"
-    SECRET_KEY: str = "supersecretkey-change-in-production"
+    SECRET_KEY: SecretStr
 
     # Server
     HOST: str = "127.0.0.1"
     PORT: int = 8000
 
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres_password@localhost:5432/lazyhire_db"
-
+    DATABASE_URL: str 
     # Redis & Celery
-    REDIS_URL: str = "redis://localhost:6379/0"
-    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
-    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
+    REDIS_URL: str 
+    CELERY_BROKER_URL: str 
+    CELERY_RESULT_BACKEND: str 
 
     # LLM Settings
     PRIMARY_LLM_PROVIDER: str = "openai"
