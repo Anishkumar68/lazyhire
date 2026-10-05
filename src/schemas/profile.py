@@ -1,7 +1,13 @@
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
+# # schema according the methods 
+# POST   /search-profiles
+# GET    /search-profiles
+# GET    /search-profiles/{id}
+# PATCH  /search-profiles/{id}
+# DELETE /search-profiles/{id}
 
 class CandidateProfileBase(BaseModel):
     first_name: str
@@ -14,14 +20,19 @@ class CandidateProfileBase(BaseModel):
     website_url: Optional[str] = None
     summary: Optional[str] = None
     skills: Optional[List[str]] = None
-    work_experience: Optional[List[Dict[str, Any]]] = None
+    total_work_experience: Optional[int] = None
     education: Optional[List[Dict[str, Any]]] = None
     work_authorization: Optional[str] = "Yes"
     requires_sponsorship: Optional[str] = "No"
     desired_salary: Optional[str] = None
     notice_period: Optional[str] = None
+    keywords: list[str] = Field(default_factory=list)
 
-
+class JobSearchConfig(BaseModel):
+    keywords: list[str] = Field(default_factory=list)
+    location: str
+    easy_apply: bool = True
+    
 class CandidateProfileCreate(CandidateProfileBase):
     pass
 
@@ -30,6 +41,8 @@ class CandidateProfileResponse(CandidateProfileBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    first_name:str
+    last_name:str
     created_at: datetime
     updated_at: datetime
 
