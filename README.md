@@ -1,4 +1,4 @@
-# 🚀 LazyHire - AI-Powered Job Application Automation Workspace
+# LazyHire - AI-Powered Job Application Automation Workspace
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version"/>
@@ -29,7 +29,8 @@ The **Phase 1 Foundation & Architecture Setup** is complete and fully verified w
 
 Below is the complete breakdown of features to implement across the remaining project phases:
 
-```mermaid
+```
+mermaid
 gantt
     title LazyHire Development Roadmap
     dateFormat  YYYY-MM-DD
