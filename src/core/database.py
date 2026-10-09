@@ -11,8 +11,12 @@ class Base(DeclarativeBase):
 
 # Use sqlite for local fallback if postgres url is sqlite or asyncpg unavailable in dev
 db_url = settings.DATABASE_URL
-if db_url.startswith("sqlite"):
-    db_url = db_url.replace("sqlite://", "sqlite+aiosqlite://")
+if db_url.startswith("sqlite:") and "+aiosqlite" not in db_url:
+    try:
+        import aiosqlite  # noqa: F401
+        db_url = db_url.replace("sqlite://", "sqlite+aiosqlite://")
+    except ImportError:
+        pass
 
 engine = create_async_engine(
     db_url,
