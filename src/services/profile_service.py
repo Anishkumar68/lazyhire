@@ -75,7 +75,9 @@ class ProfileService:
 
     async def create_profile(self, profile_data: Dict[str, Any]) -> CandidateProfile:
         """Create new candidate profile in DB and cache it in Redis."""
-        profile = CandidateProfile(**profile_data)
+        # Filter valid model attributes
+        valid_data = {k: v for k, v in profile_data.items() if hasattr(CandidateProfile, k)}
+        profile = CandidateProfile(**valid_data)
         self.db.add(profile)
         await self.db.commit()
         await self.db.refresh(profile)
@@ -137,7 +139,8 @@ class ProfileService:
 
     async def add_qa_entry(self, qa_data: Dict[str, Any]) -> QABankEntry:
         """Add new QA entry and invalidate QA bank Redis cache."""
-        entry = QABankEntry(**qa_data)
+        valid_data = {k: v for k, v in qa_data.items() if hasattr(QABankEntry, k)}
+        entry = QABankEntry(**valid_data)
         self.db.add(entry)
         await self.db.commit()
         await self.db.refresh(entry)
@@ -159,10 +162,12 @@ class ProfileService:
             "website_url": p.website_url,
             "summary": p.summary,
             "skills": p.skills or [],
-            "work_experience": p.work_experience or [],
+            "total_work_experience": p.total_work_experience,
             "education": p.education or [],
+            "keywords": p.keywords or [],
             "work_authorization": p.work_authorization,
             "requires_sponsorship": p.requires_sponsorship,
-            "desired_salary": p.desired_salary,
+            "expected_ctc": p.expected_ctc,
+            "current_ctc": p.current_ctc,
             "notice_period": p.notice_period,
         }
