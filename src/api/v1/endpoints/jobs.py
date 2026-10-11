@@ -12,6 +12,7 @@ from src.services.matching_service import MatchingService
 
 router = APIRouter()
 
+DB = Depends(get_db)
 
 @router.get("/", response_model=ResponseModel[List[JobPostingResponse]])
 async def list_jobs(
@@ -20,7 +21,7 @@ async def list_jobs(
     match_status: Optional[str] = None,
     limit: int = 50,
     offset: int = 0,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession =DB,
 ):
     service = JobService(db)
     jobs = await service.list_jobs(
@@ -34,7 +35,7 @@ async def list_jobs(
 
 
 @router.post("/", response_model=ResponseModel[JobPostingResponse], status_code=status.HTTP_201_CREATED)
-async def create_job(payload: JobPostingCreate, db: AsyncSession = Depends(get_db)):
+async def create_job(payload: JobPostingCreate, db: AsyncSession =DB):
     service = JobService(db)
     saved_jobs = await service.bulk_upsert_jobs([payload.model_dump()])
     if not saved_jobs:
@@ -43,7 +44,7 @@ async def create_job(payload: JobPostingCreate, db: AsyncSession = Depends(get_d
 
 
 @router.get("/{job_id}", response_model=ResponseModel[JobPostingResponse])
-async def get_job(job_id: int, db: AsyncSession = Depends(get_db)):
+async def get_job(job_id: int, db: AsyncSession =DB):
     service = JobService(db)
     job = await service.get_job_by_id(job_id)
     if not job:
@@ -55,7 +56,7 @@ async def get_job(job_id: int, db: AsyncSession = Depends(get_db)):
 async def discover_jobs(
     config: JobSearchConfig,
     max_pages: int = 3,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession =DB,
 ):
     """Trigger scraper discovery, deduplicate, and persist jobs to the DB."""
     service = JobService(db)
@@ -71,7 +72,7 @@ async def match_and_rank_jobs(
     candidate_id: Optional[int] = None,
     min_threshold: float = 0.5,
     auto_enqueue: bool = True,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession =DB,
 ):
     """Score pending jobs against candidate profile, update match status & fit scores, and enqueue matched jobs."""
     matching_service = MatchingService(db)

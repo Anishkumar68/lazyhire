@@ -10,9 +10,10 @@ from src.schemas.material import MaterialGenerateRequest, TailoredDocumentRespon
 
 router = APIRouter()
 
+DB = Depends(get_db)
 
 @router.post("/generate", response_model=ResponseModel[dict])
-async def generate_material(payload: MaterialGenerateRequest, db: AsyncSession = Depends(get_db)):
+async def generate_material(payload: MaterialGenerateRequest, db: AsyncSession = DB):
     # Trigger material generation background task
     return ResponseModel(
         message="Material generation task enqueued",
@@ -26,7 +27,7 @@ async def generate_material(payload: MaterialGenerateRequest, db: AsyncSession =
 
 
 @router.get("/job/{job_id}", response_model=ResponseModel[List[TailoredDocumentResponse]])
-async def get_materials_for_job(job_id: int, db: AsyncSession = Depends(get_db)):
+async def get_materials_for_job(job_id: int, db: AsyncSession = DB):
     result = await db.execute(select(TailoredDocument).where(TailoredDocument.job_id == job_id))
     docs = result.scalars().all()
     return ResponseModel(data=list(docs))

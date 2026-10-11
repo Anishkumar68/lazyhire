@@ -10,25 +10,28 @@ from src.schemas.application import ApplicationCreate, ApplicationResponse
 
 router = APIRouter()
 
+# assign db here so no need to pass it in every endpoint, but still allow override for testing
+DB = Depends(get_db) 
 
+# get applications list by id 
 @router.get("/", response_model=ResponseModel[List[ApplicationResponse]])
-async def list_applications(db: AsyncSession = Depends(get_db)):
+async def list_applications(db: AsyncSession = DB):
     result = await db.execute(select(JobApplication).order_by(JobApplication.id.desc()))
     apps = result.scalars().all()
     return ResponseModel(data=list(apps))
 
-
+# create a new application
 @router.post("/", response_model=ResponseModel[ApplicationResponse], status_code=status.HTTP_201_CREATED)
-async def create_application(payload: ApplicationCreate, db: AsyncSession = Depends(get_db)):
+async def create_application(payload: ApplicationCreate, db: AsyncSession = DB):
     app = JobApplication(**payload.model_dump())
     db.add(app)
     await db.commit()
     await db.refresh(app)
     return ResponseModel(message="Application queued", data=app)
 
-
+# trigger submission of an application
 @router.post("/{application_id}/submit", response_model=ResponseModel[dict])
-async def trigger_submission(application_id: int, db: AsyncSession = Depends(get_db)):
+async def trigger_submission(application_id: int, db: AsyncSession = DB):
     result = await db.execute(select(JobApplication).where(JobApplication.id == application_id))
     app = result.scalar_one_or_none()
     if not app:

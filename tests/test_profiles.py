@@ -12,10 +12,13 @@ async def test_create_and_cache_profile(async_client: AsyncClient):
         "location": "San Francisco, CA",
         "summary": "Experienced Full Stack Software Engineer",
         "skills": ["Python", "FastAPI", "PostgreSQL", "Redis", "Vue.js"],
+        "total_work_experience": 5,
         "work_authorization": "Yes",
         "requires_sponsorship": "No",
-        "desired_salary": "140000",
-        "notice_period": "14 days"
+        "expected_ctc": 140000,
+        "current_ctc": 120000,
+        "notice_period": "14 days",
+        "keywords": ["python", "fastapi", "backend"]
     }
 
     # 1. Create Profile via API

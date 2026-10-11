@@ -10,16 +10,17 @@ from src.schemas.provider import LLMProviderCreate, LLMProviderResponse, LLMTest
 
 router = APIRouter()
 
+DB = Depends(get_db)
 
 @router.get("/", response_model=ResponseModel[List[LLMProviderResponse]])
-async def list_providers(db: AsyncSession = Depends(get_db)):
+async def list_providers(db: AsyncSession = DB):
     result = await db.execute(select(LLMProviderConfig))
     providers = result.scalars().all()
     return ResponseModel(data=list(providers))
 
 
 @router.post("/", response_model=ResponseModel[LLMProviderResponse], status_code=status.HTTP_201_CREATED)
-async def create_provider(payload: LLMProviderCreate, db: AsyncSession = Depends(get_db)):
+async def create_provider(payload: LLMProviderCreate, db: AsyncSession = DB):
     data = payload.model_dump(exclude={"api_key"})
     provider = LLMProviderConfig(**data)
     db.add(provider)

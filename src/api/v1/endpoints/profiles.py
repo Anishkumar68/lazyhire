@@ -15,9 +15,10 @@ from src.services.profile_service import ProfileService
 
 router = APIRouter()
 
+DB = Depends(get_db)
 
 @router.get("/active", response_model=ResponseModel[Optional[Dict[str, Any]]])
-async def get_active_profile(db: AsyncSession = Depends(get_db)):
+async def get_active_profile(db: AsyncSession = DB):
     """Retrieve the primary active candidate profile from Redis cache (with DB fallback)."""
     service = ProfileService(db)
     profile = await service.get_active_profile()
@@ -27,7 +28,7 @@ async def get_active_profile(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/{candidate_id}", response_model=ResponseModel[Dict[str, Any]])
-async def get_profile_by_id(candidate_id: int, db: AsyncSession = Depends(get_db)):
+async def get_profile_by_id(candidate_id: int, db: AsyncSession = DB):
     """Retrieve candidate profile by ID using Redis cache first."""
     service = ProfileService(db)
     profile = await service.get_profile(candidate_id)
@@ -37,7 +38,7 @@ async def get_profile_by_id(candidate_id: int, db: AsyncSession = Depends(get_db
 
 
 @router.post("/", response_model=ResponseModel[CandidateProfileResponse], status_code=status.HTTP_201_CREATED)
-async def create_profile(payload: CandidateProfileCreate, db: AsyncSession = Depends(get_db)):
+async def create_profile(payload: CandidateProfileCreate, db: AsyncSession = DB):
     """Create a new candidate profile in DB and load it into Redis cache for reuse."""
     service = ProfileService(db)
     profile = await service.create_profile(payload.model_dump())
@@ -48,7 +49,7 @@ async def create_profile(payload: CandidateProfileCreate, db: AsyncSession = Dep
 async def update_profile(
     candidate_id: int,
     payload: CandidateProfileUpdate,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = DB
 ):
     """Update candidate profile in DB and refresh Redis cache."""
     service = ProfileService(db)
@@ -59,7 +60,7 @@ async def update_profile(
 
 
 @router.get("/qa-bank/list", response_model=ResponseModel[List[Dict[str, Any]]])
-async def get_qa_entries(db: AsyncSession = Depends(get_db)):
+async def get_qa_entries(db: AsyncSession = DB):
     """Get all QA Bank entries cached in Redis."""
     service = ProfileService(db)
     entries = await service.get_qa_bank_entries()
@@ -67,7 +68,7 @@ async def get_qa_entries(db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/qa-bank", response_model=ResponseModel[QABankEntryResponse], status_code=status.HTTP_201_CREATED)
-async def add_qa_entry(payload: QABankEntryCreate, db: AsyncSession = Depends(get_db)):
+async def add_qa_entry(payload: QABankEntryCreate, db: AsyncSession = DB):
     """Add a new QA Bank entry and invalidate QA Redis cache."""
     service = ProfileService(db)
     entry = await service.add_qa_entry(payload.model_dump())

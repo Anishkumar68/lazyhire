@@ -10,9 +10,10 @@ from src.schemas.application import ApplicationResponse, ReviewActionRequest
 
 router = APIRouter()
 
+DB = Depends(get_db)
 
 @router.get("/queue", response_model=ResponseModel[List[ApplicationResponse]])
-async def get_review_queue(db: AsyncSession = Depends(get_db)):
+async def get_review_queue(db: AsyncSession = DB):
     result = await db.execute(
         select(JobApplication)
         .where(JobApplication.status == "pending_review")
@@ -26,7 +27,7 @@ async def get_review_queue(db: AsyncSession = Depends(get_db)):
 async def process_review_action(
     application_id: int,
     payload: ReviewActionRequest,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = DB
 ):
     result = await db.execute(select(JobApplication).where(JobApplication.id == application_id))
     app = result.scalar_one_or_none()
