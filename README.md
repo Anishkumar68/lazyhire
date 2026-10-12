@@ -137,14 +137,27 @@ pip install email-validator
 cp .env.example .env
 ```
 
-### 3. Run FastAPI Development Server
+### 3. Run Application (Backend + Frontend)
+You can start both the FastAPI backend and the Vite React UI together with a single script:
 ```bash
-python -m uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+./run.sh
 ```
+
+Or run them individually:
+```bash
+# Backend (FastAPI)
+python -m uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+
+# Frontend (Vite React UI)
+npm --prefix UI run dev
+```
+
 Open your browser to:
+- **Operator Console UI**: [http://localhost:5173](http://localhost:5173)
 - **API Documentation (Swagger)**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - **ReDoc Documentation**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 - **Health Check**: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
+
 
 ### 4. Run Test Suite
 ```bash
