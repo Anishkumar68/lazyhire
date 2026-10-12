@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.database import get_db
@@ -9,13 +9,18 @@ from src.schemas.profile import (
     CandidateProfileUpdate,
     CandidateProfileResponse,
     QABankEntryCreate,
+    QABankEntryUpdate,
     QABankEntryResponse,
+    StoryEntryCreate,
+    StoryEntryUpdate,
+    StoryEntryResponse,
 )
 from src.services.profile_service import ProfileService
 
 router = APIRouter()
 
 DB = Depends(get_db)
+
 
 @router.get("/active", response_model=ResponseModel[Optional[Dict[str, Any]]])
 async def get_active_profile(db: AsyncSession = DB):
@@ -59,6 +64,40 @@ async def update_profile(
     return ResponseModel(message="Profile updated and Redis cache refreshed", data=updated_profile)
 
 
+@router.post("/{candidate_id}/upload-resume")
+async def upload_resume(candidate_id: int, file: UploadFile = File(...), db: AsyncSession = DB):
+    """Upload and parse an existing PDF resume into structured applicant memory bank facts."""
+    pass
+
+
+# --- Applicant Memory Bank: Story Bank Endpoints ---
+
+@router.get("/{candidate_id}/stories")
+async def list_stories(candidate_id: int, db: AsyncSession = DB):
+    """List applicant story bank entries and bullet point pool."""
+    pass
+
+
+@router.post("/{candidate_id}/stories")
+async def create_story(candidate_id: int, payload: StoryEntryCreate, db: AsyncSession = DB):
+    """Add a new story / accomplishment bullet point to the candidate's memory bank."""
+    pass
+
+
+@router.put("/{candidate_id}/stories/{story_id}")
+async def update_story(candidate_id: int, story_id: int, payload: StoryEntryUpdate, db: AsyncSession = DB):
+    """Update an existing story / accomplishment bullet point."""
+    pass
+
+
+@router.delete("/{candidate_id}/stories/{story_id}")
+async def delete_story(candidate_id: int, story_id: int, db: AsyncSession = DB):
+    """Delete a story from the memory bank."""
+    pass
+
+
+# --- Dynamic QA Bank Endpoints ---
+
 @router.get("/qa-bank/list", response_model=ResponseModel[List[Dict[str, Any]]])
 async def get_qa_entries(db: AsyncSession = DB):
     """Get all QA Bank entries cached in Redis."""
@@ -73,3 +112,15 @@ async def add_qa_entry(payload: QABankEntryCreate, db: AsyncSession = DB):
     service = ProfileService(db)
     entry = await service.add_qa_entry(payload.model_dump())
     return ResponseModel(message="QA entry added and cache updated", data=entry)
+
+
+@router.put("/qa-bank/{entry_id}")
+async def update_qa_entry(entry_id: int, payload: QABankEntryUpdate, db: AsyncSession = DB):
+    """Update a QA Bank entry."""
+    pass
+
+
+@router.delete("/qa-bank/{entry_id}")
+async def delete_qa_entry(entry_id: int, db: AsyncSession = DB):
+    """Delete a QA Bank entry."""
+    pass

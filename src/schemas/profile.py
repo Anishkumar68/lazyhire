@@ -74,9 +74,48 @@ class QABankEntryCreate(QABankEntryBase):
     pass
 
 
+class QABankEntryUpdate(BaseModel):
+    question_key: Optional[str] = None
+    question_text: Optional[str] = None
+    answer_text: Optional[str] = None
+    category: Optional[str] = None
+
+
 class QABankEntryResponse(QABankEntryBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     created_at: datetime
     updated_at: datetime
+
+
+class StoryEntryBase(BaseModel):
+    title: str
+    situation: Optional[str] = None
+    task: Optional[str] = None
+    action: Optional[str] = None
+    result: Optional[str] = None
+    skills_demonstrated: List[str] = Field(default_factory=list)
+
+
+class StoryEntryCreate(StoryEntryBase):
+    pass
+
+
+class StoryEntryUpdate(BaseModel):
+    title: Optional[str] = None
+    situation: Optional[str] = None
+    task: Optional[str] = None
+    action: Optional[str] = None
+    result: Optional[str] = None
+    skills_demonstrated: Optional[List[str]] = None
+
+
+class StoryEntryResponse(StoryEntryBase):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    candidate_id: int
+    created_at: datetime
+    updated_at: datetime
+

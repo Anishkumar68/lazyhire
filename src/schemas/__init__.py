@@ -1,27 +1,115 @@
 from src.schemas.common import ResponseModel, PageParams, PaginatedResponse
-from src.schemas.job import JobPostingCreate, JobPostingResponse, JobSearchQuery
-from src.schemas.profile import CandidateProfileCreate, CandidateProfileResponse, QABankEntryCreate, QABankEntryResponse
-from src.schemas.material import MaterialGenerateRequest, TailoredDocumentResponse
-from src.schemas.application import ApplicationCreate, ReviewActionRequest, ApplicationResponse
-from src.schemas.provider import LLMProviderCreate, LLMProviderResponse, LLMTestRequest
+from src.schemas.job import (
+    JobPostingCreate,
+    JobPostingUpdate,
+    JobPostingResponse,
+    JobSearchQuery,
+    JobScrapeRequest,
+    JobIngestRequest,
+    JobFitScoreResponse,
+)
+from src.schemas.profile import (
+    CandidateProfileCreate,
+    CandidateProfileUpdate,
+    CandidateProfileResponse,
+    JobSearchConfig,
+    QABankEntryCreate,
+    QABankEntryUpdate,
+    QABankEntryResponse,
+    StoryEntryCreate,
+    StoryEntryUpdate,
+    StoryEntryResponse,
+)
+from src.schemas.material import (
+    MaterialGenerateRequest,
+    ResumeTailorRequest,
+    CoverLetterTailorRequest,
+    DocumentCompileRequest,
+    TailoredDocumentUpdate,
+    GroundingValidationResponse,
+    TailoredDocumentResponse,
+)
+from src.schemas.application import (
+    ApplicationCreate,
+    ReviewActionRequest,
+    BulkReviewActionRequest,
+    AnswerOverrideRequest,
+    ApplicationResponse,
+    ReviewPreviewResponse,
+    ApplicationDetailResponse,
+)
+from src.schemas.provider import (
+    LLMProviderCreate,
+    LLMProviderUpdate,
+    LLMProviderResponse,
+    LLMTestRequest,
+    SupportedProviderInfo,
+)
+from src.schemas.execution import (
+    ExecutionStartRequest,
+    ExecutionStatusResponse,
+    SessionHealthResponse,
+    QuestionSolveRequest,
+    QuestionSolveResponse,
+)
+from src.schemas.tasks import (
+    TaskStatusResponse,
+    QueueStatusResponse,
+    DLQTaskResponse,
+)
+from src.schemas.analytics import (
+    DashboardStatsResponse,
+    TokenUsageResponse,
+)
 
 __all__ = [
     "ResponseModel",
     "PageParams",
     "PaginatedResponse",
     "JobPostingCreate",
+    "JobPostingUpdate",
     "JobPostingResponse",
     "JobSearchQuery",
+    "JobScrapeRequest",
+    "JobIngestRequest",
+    "JobFitScoreResponse",
     "CandidateProfileCreate",
+    "CandidateProfileUpdate",
     "CandidateProfileResponse",
+    "JobSearchConfig",
     "QABankEntryCreate",
+    "QABankEntryUpdate",
     "QABankEntryResponse",
+    "StoryEntryCreate",
+    "StoryEntryUpdate",
+    "StoryEntryResponse",
     "MaterialGenerateRequest",
+    "ResumeTailorRequest",
+    "CoverLetterTailorRequest",
+    "DocumentCompileRequest",
+    "TailoredDocumentUpdate",
+    "GroundingValidationResponse",
     "TailoredDocumentResponse",
     "ApplicationCreate",
     "ReviewActionRequest",
+    "BulkReviewActionRequest",
+    "AnswerOverrideRequest",
     "ApplicationResponse",
+    "ReviewPreviewResponse",
+    "ApplicationDetailResponse",
     "LLMProviderCreate",
+    "LLMProviderUpdate",
     "LLMProviderResponse",
     "LLMTestRequest",
+    "SupportedProviderInfo",
+    "ExecutionStartRequest",
+    "ExecutionStatusResponse",
+    "SessionHealthResponse",
+    "QuestionSolveRequest",
+    "QuestionSolveResponse",
+    "TaskStatusResponse",
+    "QueueStatusResponse",
+    "DLQTaskResponse",
+    "DashboardStatsResponse",
+    "TokenUsageResponse",
 ]
