@@ -15,7 +15,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}====================================================${NC}"
-echo -e "${BLUE}          LazyHire Unified Workspace Runner         ${NC}"
+echo -e "${RED}          LazyHire Unified Workspace Runner         ${NC}"
 echo -e "${BLUE}====================================================${NC}"
 
 # 1. Environment Verification
