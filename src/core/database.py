@@ -4,17 +4,11 @@ from sqlalchemy.orm import DeclarativeBase
 
 from src.core.config import settings
 
-
-class Base(DeclarativeBase):
-    pass
-
-
 db_url = settings.DATABASE_URL
 
 engine = create_async_engine(
     db_url,
-    echo=settings.DEBUG,
-    future=True,
+    connect_args={"check_same_thread": False}
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -25,10 +19,11 @@ AsyncSessionLocal = async_sessionmaker(
     class_=AsyncSession,
 )
 
+# 3. Base Model 
+class Base(DeclarativeBase):
+    pass
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+# 4. Async Dependency 
+async def get_db():
     async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
+        yield session
